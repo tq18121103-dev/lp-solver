@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Linear Programming Solver</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>Linear Programming Solver</h1>
+
+    <div class="section">
+
+      <label>Loại bài toán:</label>
+
+      <select id="objectiveType">
+        <option value="max">Max</option>
+        <option value="min">Min</option>
+      </select>
+
+    </div>
+
+    <div class="section">
+
+      <label>Hàm mục tiêu:</label>
+
+      <input
+        type="text"
+        id="objectiveFunction"
+        placeholder="Ví dụ: 3x1 + 2x2"
+      >
+
+    </div>
+
+    <div class="section">
+
+      <label>Số biến:</label>
+
+      <input type="number" id="numVariables" value="2">
+
+    </div>
+
+    <div class="section">
+
+      <label>Số ràng buộc:</label>
+
+      <input type="number" id="numConstraints" value="2">
+
+    </div>
+
+    <button id="generateBtn">
+      Tạo form ràng buộc
+    </button>
+
+    <div id="constraintsContainer"></div>
+    <button id="generateBoundsBtn" type="button">
+      Tạo ràng buộc biến
+    </button>
+    
+    <div id="boundsContainer"></div>
+
+    <button id="solveBtn">
+      Giải bài toán
+    </button>
+
+    <div id="output"></div>
+
+  </div>
+
+  <script type="module" src="app.js"></script>
+
+</body>
+</html>
