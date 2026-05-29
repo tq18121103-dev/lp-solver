@@ -120,15 +120,36 @@ export function standardizeConstraints(problem) {
             sign = "<=";
         }
 
-        // Dấu = hiện tại chưa xử lý simplex thường
+        // Dấu =
         if (sign === "=") {
-            needPhaseOne = true;
-        }
 
+            // Ax <= b
+            rows.push({
+                basic: `w${rows.length + 1}`,
+                rhs,
+                coeffs: coeffs.map(a => -a)
+            });
+
+            if (rhs < 0) {
+                needPhaseOne = true;
+            }
+
+            // -Ax <= -b
+            rows.push({
+                basic: `w${rows.length + 1}`,
+                rhs: -rhs,
+                coeffs: coeffs.map(a => a)
+            });
+
+            if (-rhs < 0) {
+                needPhaseOne = true;
+            }
+            continue;
+        }
         // Sau chuẩn hoá phải là <= mới tạo được w_i
         if (sign === "<=") {
             rows.push({
-                basic: `w${i + 1}`,
+                basic: `w${rows.length + 1}`,
                 rhs,
                 coeffs: coeffs.map(a => -a)
             });
