@@ -162,6 +162,11 @@ export function extractSolution(dictionary) {
     }
     }
 
+    if (dictionary.originalType === "max") {
+
+        objectiveValue = -objectiveValue;
+    }
+
     return {
         standardSolution,
         solution: originalSolution,
