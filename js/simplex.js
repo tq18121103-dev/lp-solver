@@ -3,12 +3,18 @@ function cloneDictionary(dict) {
 }
 
 function findEnteringVariable(dict) {
+
     let enteringIndex = -1;
+
     let minCoeff = 0;
 
     for (let j = 0; j < dict.objective.length; j++) {
+
         if (dict.objective[j] < minCoeff) {
-            minCoeff = dict.objective[j];
+
+            minCoeff =
+                dict.objective[j];
+
             enteringIndex = j;
         }
     }
@@ -109,6 +115,31 @@ function pivot(dict, enteringIndex, leavingRow) {
     return newDict;
 }
 
+
+function hasAlternateOptimal(dict) {
+
+    for (let j = 0; j < dict.objective.length; j++) {
+
+        // reduced cost phải bằng 0
+        if (
+            Math.abs(dict.objective[j]) < 1e-10
+        ) {
+
+            // phải pivot được
+            for (const row of dict.rows) {
+
+                if (row.coeffs[j] < -1e-10) {
+
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+
 export function simplex(dict) {
     let current = cloneDictionary(dict);
     const steps = [];
@@ -119,6 +150,8 @@ export function simplex(dict) {
         if (enteringIndex === -1) {
             return {
                 optimal: true,
+                alternateOptimal:
+                    hasAlternateOptimal(current),
                 finalDictionary: current,
                 steps
             };
