@@ -95,9 +95,6 @@ function renderOptimalConclusion(finalDictionary) {
             : finalResult.objectiveValue;
 
     text += `z* = ${finalZ}\n`;
-    text += `\nHay:\n`;
-    text += `z = ${Math.abs(finalZ)}\n`;
-
     
     if (finalDictionary.alternateOptimal) {
 
