@@ -141,11 +141,25 @@ export function extractSolution(dictionary) {
         }
     }
 
-    let objectiveValue =
-        dictionary.objectiveConstant || 0;
 
-    if (dictionary.originalType === "max") {
-        objectiveValue = -objectiveValue;
+    let objectiveValue = 0;
+
+    if (dictionary.originalObjective) {
+
+    for (
+        let i = 0;
+        i < dictionary.originalObjective.length;
+        i++
+    ) {
+
+        const variableName = `x${i + 1}`;
+
+        objectiveValue +=
+
+            dictionary.originalObjective[i] *
+
+            (originalSolution[variableName] || 0);
+    }
     }
 
     return {
