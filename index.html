@@ -39,7 +39,7 @@
 
       <label>Số biến:</label>
 
-      <input type="number" id="numVariables" value="2">
+      <input type="number" id="numVariables" value="2" min="1">
 
     </div>
 
@@ -47,7 +47,7 @@
 
       <label>Số ràng buộc:</label>
 
-      <input type="number" id="numConstraints" value="2">
+      <input type="number" id="numConstraints" value="2" min="1">
 
     </div>
 
@@ -65,11 +65,11 @@
     <button id="solveBtn">
       Giải bài toán
     </button>
-
+    <div id="graph"></div>
     <div id="output"></div>
 
   </div>
-
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <script type="module" src="app.js"></script>
 
 </body>
