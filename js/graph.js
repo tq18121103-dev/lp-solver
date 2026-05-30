@@ -58,7 +58,7 @@ export function drawGraph(problem, solution) {
 
     const xValues = [];
 
-    for (let x = 0; x <= 20; x += 0.1) {
+    for (let x = -10; x <= 20; x += 0.1) {
         xValues.push(x);
     }
 
@@ -390,6 +390,7 @@ export function drawGraph(problem, solution) {
             name: "Miền nghiệm",
 
             opacity: 0.25,
+            fillcolor: "rgba(253, 47, 6, 0.67)",
 
             line: {
                 width: 0
@@ -493,12 +494,17 @@ export function drawGraph(problem, solution) {
         },
 
         legend: {
-            orientation: "v"
+            orientation: "v",
+            x: 1.02,
+            y: 1,
+            bgcolor: "rgba(255,255,255,0.9)",
+            bordercolor: "#d1d5db",
+            borderwidth: 1
         },
 
         margin: {
             l: 70,
-            r: 30,
+            r: 180,
             t: 80,
             b: 70
         }
