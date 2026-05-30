@@ -194,7 +194,11 @@ export function twoPhaseSimplex(originalDict) {
 
     const phaseOneFinal = phaseOneResult.finalDictionary;
 
-    if ((phaseOneFinal.objectiveConstant || 0) > 1e-10) {
+    const phaseOneObjective =
+        phaseOneFinal.objectiveConstant || 0;
+
+    if (phaseOneObjective > 1e-8) {
+
         return {
             infeasible: true,
             phaseOneSteps,
