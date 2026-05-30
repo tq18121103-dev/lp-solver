@@ -2,6 +2,10 @@ export function convertToMin(problem) {
     const p = structuredClone(problem);
 
     p.originalType = problem.type;
+    p.originalObjective =
+        [...problem.objective];
+
+
 
     if (problem.type === "max") {
         p.type = "min";
@@ -113,43 +117,38 @@ export function standardizeConstraints(problem) {
         let rhs = c.rhs;
         let sign = c.sign;
 
-        // Đưa >= về <= bằng cách nhân -1
+        // Đưa >= về <= 
         if (sign === ">=") {
             coeffs = coeffs.map(v => -v);
             rhs = -rhs;
             sign = "<=";
         }
 
-        // Dấu =
+        // Dấu = 
+    
         if (sign === "=") {
 
-            // Ax <= b
+            needPhaseOne = true;
+
             rows.push({
-                basic: `w${rows.length + 1}`,
+
+                basic: `w${i + 1}`,
+
                 rhs,
+
                 coeffs: coeffs.map(a => -a)
             });
 
             if (rhs < 0) {
+
                 needPhaseOne = true;
             }
-
-            // -Ax <= -b
-            rows.push({
-                basic: `w${rows.length + 1}`,
-                rhs: -rhs,
-                coeffs: coeffs.map(a => a)
-            });
-
-            if (-rhs < 0) {
-                needPhaseOne = true;
-            }
-            continue;
         }
-        // Sau chuẩn hoá phải là <= mới tạo được w_i
+
+        // Sau chuẩn hoá phải là <= 
         if (sign === "<=") {
             rows.push({
-                basic: `w${rows.length + 1}`,
+                basic: `w${i + 1}`,
                 rhs,
                 coeffs: coeffs.map(a => -a)
             });
@@ -163,6 +162,8 @@ export function standardizeConstraints(problem) {
     return {
         objectiveName: problem.objectiveName,
         originalType: problem.originalType,
+        originalObjective: 
+            [...problem.originalObjective],
         objectiveConstant: 0,
         objective: [...problem.objective],
         variableNames,
@@ -170,4 +171,4 @@ export function standardizeConstraints(problem) {
         variableMap: problem.variableMap,
         needPhaseOne
     };
-} 
+}
