@@ -3,7 +3,18 @@ function isZero(x) {
 }
 
 function formatNumber(x) {
-    if (Number.isInteger(x)) return String(x);
+    const EPS = 1e-9;
+
+    if (Math.abs(x) < EPS) {
+        return "0";
+    }
+
+    const rounded = Math.round(x);
+
+    if (Math.abs(x - rounded) < EPS) {
+        return String(rounded);
+    }
+
     return String(Number(x.toFixed(6)));
 }
 
@@ -131,7 +142,7 @@ export function extractSolution(dictionary) {
                 value += sign * (standardSolution[varName] || 0);
             }
 
-            originalSolution[item.original] = value;
+            originalSolution[item.original] = Number(formatNumber(value));
         }
     } else {
         for (const name of dictionary.variableNames) {
@@ -170,6 +181,6 @@ export function extractSolution(dictionary) {
     return {
         standardSolution,
         solution: originalSolution,
-        objectiveValue
+        objectiveValue: Number(formatNumber(objectiveValue))
     };
 }
