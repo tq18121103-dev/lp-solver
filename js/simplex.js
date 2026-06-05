@@ -1,20 +1,16 @@
+const EPS = 1e-10;
+
 function cloneDictionary(dict) {
     return JSON.parse(JSON.stringify(dict));
 }
 
 function findEnteringVariable(dict) {
-
     let enteringIndex = -1;
-
-    let minCoeff = 0;
+    let minCoeff = -EPS;
 
     for (let j = 0; j < dict.objective.length; j++) {
-
         if (dict.objective[j] < minCoeff) {
-
-            minCoeff =
-                dict.objective[j];
-
+            minCoeff = dict.objective[j];
             enteringIndex = j;
         }
     }
@@ -29,10 +25,10 @@ function findLeavingRow(dict, enteringIndex) {
     for (let i = 0; i < dict.rows.length; i++) {
         const coeff = dict.rows[i].coeffs[enteringIndex];
 
-        if (coeff < 0) {
+        if (coeff < -EPS) {
             const ratio = dict.rows[i].rhs / (-coeff);
 
-            if (ratio < bestRatio) {
+            if (ratio < bestRatio - EPS) {
                 bestRatio = ratio;
                 leavingRow = i;
             }
@@ -117,19 +113,10 @@ function pivot(dict, enteringIndex, leavingRow) {
 
 
 function hasAlternateOptimal(dict) {
-
     for (let j = 0; j < dict.objective.length; j++) {
-
-        // reduced cost phải bằng 0
-        if (
-            Math.abs(dict.objective[j]) < 1e-10
-        ) {
-
-            // phải pivot được
+        if (Math.abs(dict.objective[j]) < EPS) {
             for (const row of dict.rows) {
-
-                if (row.coeffs[j] < -1e-10) {
-
+                if (row.coeffs[j] < -EPS) {
                     return true;
                 }
             }
@@ -138,7 +125,6 @@ function hasAlternateOptimal(dict) {
 
     return false;
 }
-
 
 export function simplex(dict) {
     let current = cloneDictionary(dict);
