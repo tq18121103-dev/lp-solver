@@ -110,6 +110,18 @@ export function standardizeConstraints(problem) {
 
     let needPhaseOne = false;
 
+    function addLessEqualRow(coeffs, rhs) {
+        rows.push({
+            basic: `w${rows.length + 1}`,
+            rhs,
+            coeffs: coeffs.map(a => -a)
+        });
+
+        if (rhs < 0) {
+            needPhaseOne = true;
+        }
+    }
+
     for (let i = 0; i < problem.constraints.length; i++) {
         const c = structuredClone(problem.constraints[i]);
 
@@ -117,53 +129,33 @@ export function standardizeConstraints(problem) {
         let rhs = c.rhs;
         let sign = c.sign;
 
-        // Đưa >= về <= 
-        if (sign === ">=") {
-            coeffs = coeffs.map(v => -v);
-            rhs = -rhs;
-            sign = "<=";
-        }
-
-        // Dấu = 
-    
-        if (sign === "=") {
-
-            needPhaseOne = true;
-
-            rows.push({
-
-                basic: `w${i + 1}`,
-
-                rhs,
-
-                coeffs: coeffs.map(a => -a)
-            });
-
-            if (rhs < 0) {
-
-                needPhaseOne = true;
-            }
-        }
-
-        // Sau chuẩn hoá phải là <= 
         if (sign === "<=") {
-            rows.push({
-                basic: `w${i + 1}`,
-                rhs,
-                coeffs: coeffs.map(a => -a)
-            });
+            addLessEqualRow(coeffs, rhs);
+        }
 
-            if (rhs < 0) {
-                needPhaseOne = true;
-            }
+        else if (sign === ">=") {
+            addLessEqualRow(
+                coeffs.map(v => -v),
+                -rhs
+            );
+        }
+
+        else if (sign === "=") {
+            // Ax = b  <=>  Ax <= b và -Ax <= -b
+
+            addLessEqualRow(coeffs, rhs);
+
+            addLessEqualRow(
+                coeffs.map(v => -v),
+                -rhs
+            );
         }
     }
 
     return {
         objectiveName: problem.objectiveName,
         originalType: problem.originalType,
-        originalObjective: 
-            [...problem.originalObjective],
+        originalObjective: [...problem.originalObjective],
         objectiveConstant: 0,
         objective: [...problem.objective],
         variableNames,
