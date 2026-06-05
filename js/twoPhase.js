@@ -128,6 +128,37 @@ function findMostNegativeRhsRow(dict) {
     return rowIndex;
 }
 
+
+function removeBasicX0(dict) {
+    const newDict = cloneDictionary(dict);
+    const x0RowIndex = newDict.rows.findIndex(
+        row => row.basic === "x0"
+    );
+
+    if (x0RowIndex === -1) {
+        return newDict;
+    }
+
+    const row = newDict.rows[x0RowIndex];
+
+    for (let j = 0; j < row.coeffs.length; j++) {
+        const varName = newDict.variableNames[j];
+
+        if (
+            varName !== "x0" &&
+            Math.abs(row.coeffs[j]) > 1e-10
+        ) {
+            return pivot(newDict, j, x0RowIndex);
+        }
+    }
+
+    if (Math.abs(row.rhs) < 1e-10) {
+        newDict.rows.splice(x0RowIndex, 1);
+    }
+
+    return newDict;
+}
+
 function removeX0Column(dict) {
     const newDict = cloneDictionary(dict);
     const x0Index = newDict.variableNames.indexOf("x0");
@@ -206,7 +237,8 @@ export function twoPhaseSimplex(originalDict) {
         };
     }
 
-    let phaseTwoStart = removeX0Column(phaseOneFinal);
+    let phaseOneClean = removeBasicX0(phaseOneFinal);
+    let phaseTwoStart = removeX0Column(phaseOneClean);
     phaseTwoStart.costMap = aux.costMap;
     phaseTwoStart.originalObjectiveName = aux.originalObjectiveName;
     phaseTwoStart.originalType = aux.originalType;
